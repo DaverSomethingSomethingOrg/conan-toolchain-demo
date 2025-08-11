@@ -54,7 +54,7 @@ jobs:
       ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
       ubuntu-aarch64-image: "nexus.homelab/conan-bootstrap-ubuntu:aarch64-latest"
       ubuntu-x86_64-enabled: ${{ inputs.ubuntu-x86_64-enabled }}
-      ubuntu-x86_64-image: "nexus.homelab/conan-bootstrap-ubuntu:aarch64-latest"
+      ubuntu-x86_64-image: "nexus.homelab/conan-bootstrap-ubuntu:x86_64-latest"
       almalinux-aarch64-enabled: "${{ inputs.almalinux-aarch64-enabled }}"
       almalinux-aarch64-image: "nexus.homelab/conan-bootstrap-almalinux:aarch64-latest"
       almalinux-x86_64-enabled: ${{ inputs.almalinux-x86_64-enabled }}
@@ -75,7 +75,7 @@ jobs:
       ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
       ubuntu-aarch64-image: "nexus.homelab/conan-bootstrap-ubuntu:aarch64-latest"
       ubuntu-x86_64-enabled: ${{ inputs.ubuntu-x86_64-enabled }}
-      ubuntu-x86_64-image: "nexus.homelab/conan-bootstrap-ubuntu:aarch64-latest"
+      ubuntu-x86_64-image: "nexus.homelab/conan-bootstrap-ubuntu:x86_64-latest"
       almalinux-aarch64-enabled: "${{ inputs.almalinux-aarch64-enabled }}"
       almalinux-aarch64-image: "nexus.homelab/conan-bootstrap-almalinux:aarch64-latest"
       almalinux-x86_64-enabled: ${{ inputs.almalinux-x86_64-enabled }}
@@ -97,7 +97,7 @@ jobs:
       ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
       ubuntu-aarch64-image: "nexus.homelab/conan-base-ubuntu:aarch64-latest"
       ubuntu-x86_64-enabled: ${{ inputs.ubuntu-x86_64-enabled }}
-      ubuntu-x86_64-image: "nexus.homelab/conan-base-ubuntu:aarch64-latest"
+      ubuntu-x86_64-image: "nexus.homelab/conan-base-ubuntu:x86_64-latest"
       almalinux-aarch64-enabled: "${{ inputs.almalinux-aarch64-enabled }}"
       almalinux-aarch64-image: "nexus.homelab/conan-base-almalinux:aarch64-latest"
       almalinux-x86_64-enabled: ${{ inputs.almalinux-x86_64-enabled }}
