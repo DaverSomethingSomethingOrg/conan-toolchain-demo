@@ -1,0 +1,72 @@
+######################################################################
+# conan-ThreeDSuite.yml
+#
+# Copyright © 2025 David L. Armstrong
+#
+# This workflow calls the conan-multiPlatformToolchain.yml workflow
+# for our demo toolchain.
+#
+# For more information see:
+# - https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
+#
+
+name: Demo 3D and gaming suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner_selection-aarch64:
+        type: string
+        default: linux-aarch64
+      runner_selection-x86_64:
+        type: string
+        default: linux-x86_64
+      conan_recipe_remote:
+        type: string
+        default: "./components/ThreeDSuite/conan-center-local"
+      toolchain_prefix:
+        type: string
+        default: "/opt/3dSuite"
+      ubuntu-aarch64-enabled:
+        type: boolean
+        default: false
+      ubuntu-x86_64-enabled:
+        type: boolean
+        default: false
+      almalinux-aarch64-enabled:
+        type: boolean
+        default: false
+      almalinux-x86_64-enabled:
+        type: boolean
+        default: false
+
+jobs:
+  threeDSuite:
+    uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-multiPlatformToolchain.yml@main
+    secrets: inherit
+    with:
+      component_subdirectory: "components/ThreeDSuite"
+      runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
+      runner_selection-x86_64: ${{ inputs.runner_selection-x86_64 }}
+      conan_recipe_remote: ${{ inputs.conan_recipe_remote }}
+      toolchain_prefix: ${{ inputs.toolchain_prefix }}
+      ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
+      ubuntu-x86_64-enabled: ${{ inputs.ubuntu-x86_64-enabled }}
+      almalinux-aarch64-enabled: "${{ inputs.almalinux-aarch64-enabled }}"
+      almalinux-x86_64-enabled: ${{ inputs.almalinux-x86_64-enabled }}
+
+#  build_container:
+#    uses: ./.github/workflows/docker-multiPlatform.yml
+#    secrets: inherit
+#    needs: toolchain_phase3
+#    with:
+#      component_subdirectory: "components/build_container"
+#      restore_cache_prefix: "toolchain_phase3-${{ github.run_id }}"
+#      runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
+#      runner_selection-x86_64: ${{ inputs.runner_selection-x86_64 }}
+#      toolchain_prefix: ${{ inputs.toolchain_prefix }}
+#      ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
+#      ubuntu-x86_64-enabled: ${{ inputs.ubuntu-x86_64-enabled }}
+#      almalinux-aarch64-enabled: "${{ inputs.almalinux-aarch64-enabled }}"
+#      almalinux-x86_64-enabled: ${{ inputs.almalinux-x86_64-enabled }}
+  
