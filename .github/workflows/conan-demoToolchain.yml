@@ -10,7 +10,7 @@
 # - https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
 #
 
-name: Demo Phased Toolchain build
+name: Demo Phased GCC Compiler Bootstrap build
 
 on:
   workflow_dispatch:

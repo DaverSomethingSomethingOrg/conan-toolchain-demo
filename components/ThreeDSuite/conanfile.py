@@ -12,11 +12,14 @@ class ThreeDSuite(ConanFile):
     }
 
     def requirements(self):
-        self.requires("openusd/")
-        self.requires("moonray/")
-        self.requires("godot/")
-        self.requires("renderman/")
-        self.requires("blender/")
+        self.requires("blender/4.5.1")
+#        self.requires("openusd/")
+#        self.requires("moonray/")
+#        self.requires("godot/")
+#        self.requires("renderman/")
 
     def layout(self):
         basic_layout(self, src_folder="src")
+
+    def configure(self):
+        self.options["cpython/*"].env_vars = True
