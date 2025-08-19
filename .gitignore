@@ -1,2 +1,6 @@
 *.swp
 .devcontainer/.env
+
+components/*/build-release
+components/*/deb_deploy
+components/*/rpm_deploy

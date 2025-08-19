@@ -10,8 +10,7 @@
 # - https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
 #
 
-name: Demo Phased GCC Compiler Bootstrap build
-
+name: Demo MultiPhase GCC Compiler Bootstrap Build
 on:
   workflow_dispatch:
     inputs:
@@ -21,9 +20,14 @@ on:
       runner_selection-x86_64:
         type: string
         default: linux-x86_64
-      conan_recipe_remote:
+      conan_center_proxy:
+        type: string
+      conan_local_recipes:
         type: string
         default: "./conan-center-index"  # We provide this as a git submodule since we use a non-default branch
+      conan_local_repo:
+        type: string
+        default: "http://nexus.homelab/repository/conan-homelab/"
       toolchain_prefix:
         type: string
         default: "/opt/toolchain"
@@ -49,7 +53,9 @@ jobs:
       save_cache_prefix: "toolchain_phase1-${{ github.run_id }}"
       runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
       runner_selection-x86_64: ${{ inputs.runner_selection-x86_64 }}
-      conan_recipe_remote: ${{ inputs.conan_recipe_remote }}
+      conan_center_proxy: ${{ inputs.conan_center_proxy }}
+      conan_local_repo: ${{ inputs.conan_local_repo }}
+      conan_local_recipes: ${{ inputs.conan_local_recipes }}
       toolchain_prefix: ${{ inputs.toolchain_prefix }}
       ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
       ubuntu-aarch64-image: "nexus.homelab/conan-bootstrap-ubuntu:aarch64-latest"
@@ -70,7 +76,9 @@ jobs:
       save_cache_prefix: "toolchain_phase2-${{ github.run_id }}"
       runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
       runner_selection-x86_64: ${{ inputs.runner_selection-x86_64 }}
-      conan_recipe_remote: ${{ inputs.conan_recipe_remote }}
+      conan_center_proxy: ${{ inputs.conan_center_proxy }}
+      conan_local_repo: ${{ inputs.conan_local_repo }}
+      conan_local_recipes: ${{ inputs.conan_local_recipes }}
       toolchain_prefix: ${{ inputs.toolchain_prefix }}
       ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
       ubuntu-aarch64-image: "nexus.homelab/conan-bootstrap-ubuntu:aarch64-latest"
@@ -92,7 +100,9 @@ jobs:
       save_cache_prefix: "toolchain_phase3-${{ github.run_id }}"
       runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
       runner_selection-x86_64: ${{ inputs.runner_selection-x86_64 }}
-      conan_recipe_remote: ${{ inputs.conan_recipe_remote }}
+      conan_center_proxy: ${{ inputs.conan_center_proxy }}
+      conan_local_repo: ${{ inputs.conan_local_repo }}
+      conan_local_recipes: ${{ inputs.conan_local_recipes }}
       toolchain_prefix: ${{ inputs.toolchain_prefix }}
       ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
       ubuntu-aarch64-image: "nexus.homelab/conan-base-ubuntu:aarch64-latest"

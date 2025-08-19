@@ -1,6 +1,6 @@
 // For format details, see https://aka.ms/devcontainer.json.
 {
-  "name": "Base OS with Python3 and Git",
+  "name": "Maxed-out base image",
   "image": "nexus.homelab/conan-docker-build-ubuntu:aarch64-latest",
 //  "image": "nexus.homelab/conan-docker-build-almalinux:aarch64-latest",
 
