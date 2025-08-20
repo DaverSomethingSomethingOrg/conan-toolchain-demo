@@ -13,7 +13,7 @@ class Toolchain(ConanFile):
 
     def requirements(self):
         self.requires("make/4.4.1")
-        self.requires("cmake/4.0.1")
+        self.requires("cmake/4.1.0")
         self.requires("binutils/2.42")
         self.requires("gcc/12.2.0")
         return
