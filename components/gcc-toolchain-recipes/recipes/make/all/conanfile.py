@@ -20,6 +20,22 @@ class MakeConan(ConanFile):
     license = "GPL-3.0-or-later"
     settings = "os", "arch", "compiler", "build_type"
 
+    options = {
+        "install_prefix": [None, "ANY"],
+    }
+    default_options = {
+        "install_prefix": None,
+    }
+
+#    def requirements(self):
+#        yum = package_manager.Yum(self)
+#        yum.install([f"{ pkg_prefix }-mpc-1.2.0"], update=True, check=True)
+
+#        self.requires("mpfr/4.2.0")
+#        self.requires("gmp/6.3.0")
+#        self.requires("zlib/[>=1.2.13 <2]")
+#        self.requires("isl/0.26")
+
     @property
     def _settings_build(self):
         return getattr(self, "settings_build", self.settings)
@@ -46,7 +62,12 @@ class MakeConan(ConanFile):
             vcvars = VCVars(self)
             vcvars.generate()
         if self._settings_build.os != "Windows":
-            tc = AutotoolsToolchain(self)
+            tc = None
+            if self.options.install_prefix:
+                tc = AutotoolsToolchain(self, prefix=self.options.install_prefix)
+            else:
+                tc = AutotoolsToolchain(self)
+
             tc.generate()
 
     def build(self):
@@ -58,16 +79,21 @@ class MakeConan(ConanFile):
                     command = "build_w32.bat --without-guile"
                 else:
                     command = "build_w32.bat --without-guile gcc"
+                self.run(command)
             else:
                 autotools = Autotools(self)
                 autotools.configure()
-                command = "./build.sh"
-            self.run(command)
+                autotools.make()
 
     def package(self):
-        copy(self, "COPYING", src=self.source_folder, dst=os.path.join(self.package_folder, "licenses"))
-        for make_exe in ("make", "*gnumake.exe"):
-            copy(self, make_exe, src=self.source_folder, dst=os.path.join(self.package_folder, "bin"), keep_path=False)
+        with chdir(self, self.source_folder):
+            autotools = Autotools(self)
+#TODO might not work for Windows lol
+            autotools.install()
+
+        copy(self, "COPYING", src=self.source_folder, dst=os.path.join(self.package_folder, str(self.options.install_prefix), "licenses"))
+#        for make_exe in ("make", "*gnumake.exe"):
+#            copy(self, make_exe, src=self.source_folder, dst=os.path.join(self.package_folder, "bin"), keep_path=True)
 
     def package_info(self):
         self.cpp_info.includedirs = []
@@ -75,6 +101,8 @@ class MakeConan(ConanFile):
 
         make = os.path.join(self.package_folder, "bin", "gnumake.exe" if self.settings.os == "Windows" else "make")
         self.conf_info.define("tools.gnu:make_program", make)
+
+        self.user_info.install_prefix = self.options.install_prefix
 
         # TODO: to remove in conan v2
         self.user_info.make = make

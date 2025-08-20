@@ -34,6 +34,7 @@ class BinutilsConan(ConanFile):
         "target_os": [None, "ANY"],
         "target_triplet": [None, "ANY"],
         "prefix": [None, "ANY"],
+        "install_prefix": [None, "ANY"],
     }
 
     default_options = {
@@ -43,6 +44,7 @@ class BinutilsConan(ConanFile):
         "target_os": None,  # Initialized in configure, checked in validate
         "target_triplet": None,  # Initialized in configure, checked in validate
         "prefix": None,  # Initialized in configure (NOT config_options, because it depends on target_{arch,os})
+        "install_prefix": None,
     }
 
     def layout(self):
@@ -150,13 +152,19 @@ class BinutilsConan(ConanFile):
         env.generate()
 
         def yes_no(opt): return "yes" if opt else "no"
-        tc = AutotoolsToolchain(self)
+
+        tc = None
+        if self.options.install_prefix:
+            tc = AutotoolsToolchain(self, prefix=self.options.install_prefix)
+        else:
+            tc = AutotoolsToolchain(self)
+            tc.configure_args.append("--exec_prefix=/bin/exec_prefix")
+            tc.configure_args.append(f"--program-prefix={self.options.prefix}")
+            tc.configure_args.append(f"--target={self.options.target_triplet}")
+
         tc.configure_args.append("--disable-nls")
-        tc.configure_args.append(f"--target={self.options.target_triplet}")
         tc.configure_args.append(f"--enable-multilib={yes_no(self.options.multilib)}")
         tc.configure_args.append(f"--with-zlib={unix_path(self, self.dependencies['zlib'].package_folder)}")
-        tc.configure_args.append(f"--program-prefix={self.options.prefix}")
-        tc.configure_args.append("--exec_prefix=/bin/exec_prefix")
         tc.generate()
 
     def build(self):

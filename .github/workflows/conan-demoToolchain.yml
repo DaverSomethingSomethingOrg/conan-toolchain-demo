@@ -24,7 +24,7 @@ on:
         type: string
       conan_local_recipes:
         type: string
-        default: "./conan-center-index"  # We provide this as a git submodule since we use a non-default branch
+        default: "components/gcc-toolchain-recipes"
       conan_local_repo:
         type: string
         default: "http://nexus.homelab/repository/conan-homelab/"
