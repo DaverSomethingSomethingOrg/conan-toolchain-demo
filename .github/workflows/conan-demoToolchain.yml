@@ -54,7 +54,6 @@ jobs:
 ##        password: ${{ secrets.GITHUB_TOKEN }}
 #        username: ${{ vars.NEXUS_CI_USER }}
 #        password: ${{ secrets.NEXUS_CI_PASSWORD }
-    secrets: inherit
     steps:
     - name: Trigger Conan Bootstrap Container Builds
 #      if: ${{ inputs.trigger_container_builds }}
@@ -73,7 +72,7 @@ jobs:
             "ubuntu-aarch64-enabled": "${{ inputs.ubuntu-aarch64-enabled }}",
             "ubuntu-x86_64-enabled": "${{ inputs.ubuntu-x86_64-enabled }}",
             "runner_selection-aarch64": "${{ inputs.runner_selection-aarch64 }}",
-            "runer_selection-x86_64=": "${{ inputs.runer_selection-x86_64= }}"
+            "runer_selection-x86_64": "${{ inputs.runer_selection-x86_64 }}"
           }
 
 #      env:
@@ -171,7 +170,6 @@ jobs:
 ##        password: ${{ secrets.GITHUB_TOKEN }}
 #        username: ${{ vars.NEXUS_CI_USER }}
 #        password: ${{ secrets.NEXUS_CI_PASSWORD }
-    secrets: inherit
     steps:
     - name: Trigger Conan Build Container Builds
 #      if: ${{ inputs.trigger_container_builds }}
@@ -190,7 +188,7 @@ jobs:
             "ubuntu-aarch64-enabled": "${{ inputs.ubuntu-aarch64-enabled }}",
             "ubuntu-x86_64-enabled": "${{ inputs.ubuntu-x86_64-enabled }}",
             "runner_selection-aarch64": "${{ inputs.runner_selection-aarch64 }}",
-            "runer_selection-x86_64=": "${{ inputs.runer_selection-x86_64= }}"
+            "runer_selection-x86_64": "${{ inputs.runer_selection-x86_64 }}"
           }
 
 #      env:
