@@ -46,7 +46,7 @@ on:
 
 jobs:
   trigger_bootstrap_container_image:
-    runs-on: ${{ inputs.runer_selection-x86_64 }}
+    runs-on: ${{ inputs.runner_selection-x86_64 }}
 #    container:
 #      image: "nexus.homelab/conan-build-ubuntu:aarch64-latest"
 #      credentials:
@@ -72,7 +72,7 @@ jobs:
             "ubuntu-aarch64-enabled": "${{ inputs.ubuntu-aarch64-enabled }}",
             "ubuntu-x86_64-enabled": "${{ inputs.ubuntu-x86_64-enabled }}",
             "runner_selection-aarch64": "${{ inputs.runner_selection-aarch64 }}",
-            "runer_selection-x86_64": "${{ inputs.runer_selection-x86_64 }}"
+            "runner_selection-x86_64": "${{ inputs.runner_selection-x86_64 }}"
           }
 
 #      env:
@@ -86,7 +86,7 @@ jobs:
 #          --raw-field "ubuntu-aarch64-enabled=${{ inputs.ubuntu-aarch64-enabled }}" \
 #          --raw-field "ubuntu-x86_64-enabled=${{ inputs.ubuntu-x86_64-enabled }}" \
 #          --raw-field "runner_selection-aarch64=${{ inputs.runner_selection-aarch64 }}" \
-#          --raw-field "runer_selection-x86_64=${{ inputs.runer_selection-x86_64 }}" \
+#          --raw-field "runner_selection-x86_64=${{ inputs.runner_selection-x86_64 }}" \
 #          --repo "DaverSomethingSomethingOrg/conan-build-container" \
 #          --ref "main" \
 #          conan-build-container.yml
@@ -162,7 +162,7 @@ jobs:
 
   trigger_build_container_image:
     needs: toolchain_phase3
-    runs-on: ${{ inputs.runer_selection-x86_64 }}
+    runs-on: ${{ inputs.runner_selection-x86_64 }}
 #    container:
 #      image: "nexus.homelab/conan-build-ubuntu:aarch64-latest"
 #      credentials:
@@ -188,7 +188,7 @@ jobs:
             "ubuntu-aarch64-enabled": "${{ inputs.ubuntu-aarch64-enabled }}",
             "ubuntu-x86_64-enabled": "${{ inputs.ubuntu-x86_64-enabled }}",
             "runner_selection-aarch64": "${{ inputs.runner_selection-aarch64 }}",
-            "runer_selection-x86_64": "${{ inputs.runer_selection-x86_64 }}"
+            "runner_selection-x86_64": "${{ inputs.runner_selection-x86_64 }}"
           }
 
 #      env:
@@ -202,7 +202,7 @@ jobs:
 #          --raw-field "ubuntu-aarch64-enabled=${{ inputs.ubuntu-aarch64-enabled }}" \
 #          --raw-field "ubuntu-x86_64-enabled=${{ inputs.ubuntu-x86_64-enabled }}" \
 #          --raw-field "runner_selection-aarch64=${{ inputs.runner_selection-aarch64 }}" \
-#          --raw-field "runer_selection-x86_64=${{ inputs.runer_selection-x86_64 }}" \
+#          --raw-field "runner_selection-x86_64=${{ inputs.runner_selection-x86_64 }}" \
 #          --repo "DaverSomethingSomethingOrg/conan-build-container" \
 #          --ref "main" \
 #          conan-build-container.yml
