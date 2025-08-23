@@ -3,6 +3,7 @@ from conan.tools.layout import basic_layout
 
 class Toolchain(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
+    author = "David L. Armstrong"
 
     options = {
         "install_prefix": [None, "ANY"],

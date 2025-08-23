@@ -4,6 +4,7 @@ from conan.tools.system.package_manager import Apt, Yum
 
 class Toolchain(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
+    author = "David L. Armstrong"
 
     options = {
         "install_prefix": [None, "ANY"],

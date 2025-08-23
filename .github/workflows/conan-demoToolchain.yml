@@ -45,6 +45,19 @@ on:
         default: false
 
 jobs:
+  bootstrap_container_image:
+    uses: DaverSomethingSomethingOrg/conan-build-container/.github/workflows/conan-build-container.yml@main
+    secrets: inherit
+    with:
+      enable_build_images: false
+      container_push: true
+      almalinux-aarch64-enabled: ${{ inputs.almalinux-aarch64-enabled }}
+      almalinux-x86_64-enabled: ${{ inputs.almalinux-x86_64-enabled }}
+      ubuntu-aarch64-enabled: ${{ inputs.ubuntu-aarch64-enabled }}
+      ubuntu-x86_64-enabled: ${{ inputs.ubuntu-x86_64-enabled }}
+      runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
+      runner_selection-x86_64: ${{ inputs.runner_selection-x86_64 }}
+
   toolchain_phase1:
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-multiPlatformToolchain.yml@main
     secrets: inherit
@@ -112,3 +125,16 @@ jobs:
       almalinux-aarch64-image: "nexus.homelab/conan-base-almalinux:aarch64-latest"
       almalinux-x86_64-enabled: ${{ inputs.almalinux-x86_64-enabled }}
       almalinux-x86_64-image: "nexus.homelab/conan-base-almalinux:x86_64-latest"
+
+  build_container_image:
+    uses: DaverSomethingSomethingOrg/conan-build-container/.github/workflows/conan-build-container.yml@main
+    secrets: inherit
+    with:
+      enable_build_images: true
+      container_push: true
+      almalinux-aarch64-enabled: ${{ inputs.almalinux-aarch64-enabled }}
+      almalinux-x86_64-enabled: ${{ inputs.almalinux-x86_64-enabled }}
+      ubuntu-aarch64-enabled: ${{ inputs.ubuntu-aarch64-enabled }}
+      ubuntu-x86_64-enabled: ${{ inputs.ubuntu-x86_64-enabled }}
+      runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
+      runner_selection-x86_64: ${{ inputs.runner_selection-x86_64 }}
