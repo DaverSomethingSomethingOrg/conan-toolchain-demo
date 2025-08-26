@@ -24,7 +24,7 @@ on:
         type: string
       conan_local_recipes:
         type: string
-        default: "components/gcc-toolchain-recipes"
+        default: "demos/gcc-toolchain/gcc-toolchain-recipes"
       conan_local_repo:
         type: string
         default: "http://nexus.homelab/repository/conan-homelab/"
@@ -96,7 +96,7 @@ jobs:
     secrets: inherit
     needs: trigger_bootstrap_container_image
     with:
-      component_subdirectory: "components/phase1"
+      component_subdirectory: "demos/gcc-toolchain/phase1"
       save_cache_prefix: "toolchain_phase1-${{ github.run_id }}"
       runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
       runner_selection-x86_64: ${{ inputs.runner_selection-x86_64 }}
@@ -118,7 +118,7 @@ jobs:
     secrets: inherit
     needs: toolchain_phase1
     with:
-      component_subdirectory: "components/phase2"
+      component_subdirectory: "demos/gcc-toolchain/phase2"
       restore_cache_prefix: "toolchain_phase1-${{ github.run_id }}"
       save_cache_prefix: "toolchain_phase2-${{ github.run_id }}"
       runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
@@ -142,7 +142,7 @@ jobs:
     needs: toolchain_phase2
     with:
       upload_packages: true
-      component_subdirectory: "components/phase3"
+      component_subdirectory: "demos/gcc-toolchain/phase3"
       restore_cache_prefix: "toolchain_phase2-${{ github.run_id }}"
       save_cache_prefix: "toolchain_phase3-${{ github.run_id }}"
       runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
