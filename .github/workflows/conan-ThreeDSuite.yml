@@ -23,7 +23,7 @@ on:
         default: linux-x86_64
       conan_recipe_remote:
         type: string
-        default: "./components/ThreeDSuite/conan-center-local"
+        default: "./demos/ThreeDSuite/conan-center-local"
       toolchain_prefix:
         type: string
         default: "/opt/3dSuite"
@@ -45,7 +45,7 @@ jobs:
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-multiPlatformToolchain.yml@main
     secrets: inherit
     with:
-      component_subdirectory: "components/ThreeDSuite"
+      component_subdirectory: "demos/ThreeDSuite"
       runner_selection-aarch64: ${{ inputs.runner_selection-aarch64 }}
       runner_selection-x86_64: ${{ inputs.runner_selection-x86_64 }}
       conan_recipe_remote: ${{ inputs.conan_recipe_remote }}

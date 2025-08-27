@@ -4,7 +4,3 @@
 demos/**/build-release
 demos/**/deb_deploy
 demos/**/rpm_deploy
-
-components/*/build-release
-components/*/deb_deploy
-components/*/rpm_deploy

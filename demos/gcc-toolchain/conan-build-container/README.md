@@ -1,13 +1,6 @@
 # Conan Build Containers
 
-Work-in-Progress:
-
-GitHub Workflows are still being developed for building these images,
-so currently the script `build_containers.sh` is used to build and
-push all images.
-
-
-This repository contains Container image definitions used for building
+This directory contains Container image definitions used for building
 packages using the [Conan C/C++ Package Manager](https://conan.io/).
 
 OS/Platform support for all images includes:
@@ -43,7 +36,7 @@ our `conan-build` images.
 `conan-docker-build` adds Docker CE and GitHub Client (`gh`) with
 the `gh-act` plugin for use in toolchain workflow/container development.
 
-## `build_containers.sh` - Building the images
+## `build_containers.sh` - Building the images in your sandbox
 
 ```bash
 # ./build_containers.sh --help
