@@ -45,56 +45,23 @@ on:
         default: false
 
 jobs:
-  trigger_bootstrap_container_image:
-    runs-on: ${{ inputs.runner_selection-x86_64 }}
-#    container:
-#      image: "nexus.homelab/conan-build-ubuntu:aarch64-latest"
-#      credentials:
-##        username: ${{ github.actor }}
-##        password: ${{ secrets.GITHUB_TOKEN }}
-#        username: ${{ vars.NEXUS_CI_USER }}
-#        password: ${{ secrets.NEXUS_CI_PASSWORD }
-    steps:
-    - name: Trigger Conan Bootstrap Container Builds
-#      if: ${{ inputs.trigger_container_builds }}
-      uses: the-actions-org/workflow-dispatch@v4
-      with:
-        wait-for-completion: true
-        token: ${{ secrets.MY_GH_TOKEN }}
-        workflow: conan-build-container.yml
-        repo: DaverSomethingSomethingOrg/conan-build-container
-        ref: main
-        inputs: |
-          { "enable_build_images": false,
-            "container_push": true,
-            "almalinux-aarch64-enabled": "${{ inputs.almalinux-aarch64-enabled }}",
-            "almalinux-x86_64-enabled": "${{ inputs.almalinux-x86_64-enabled }}",
-            "ubuntu-aarch64-enabled": "${{ inputs.ubuntu-aarch64-enabled }}",
-            "ubuntu-x86_64-enabled": "${{ inputs.ubuntu-x86_64-enabled }}",
-            "runner_selection-aarch64": "${{ inputs.runner_selection-aarch64 }}",
-            "runner_selection-x86_64": "${{ inputs.runner_selection-x86_64 }}"
-          }
-
-#      env:
-#        GH_TOKEN: ${{ secrets.MY_GH_TOKEN }}
-#      run: |
-#        gh workflow run \
-#          --raw-field "enable_build_images=false" \
-#          --raw-field "container_push=true" \
-#          --raw-field "almalinux-aarch64-enabled=${{ inputs.almalinux-aarch64-enabled }}" \
-#          --raw-field "almalinux-x86_64-enabled=${{ inputs.almalinux-x86_64-enabled }}" \
-#          --raw-field "ubuntu-aarch64-enabled=${{ inputs.ubuntu-aarch64-enabled }}" \
-#          --raw-field "ubuntu-x86_64-enabled=${{ inputs.ubuntu-x86_64-enabled }}" \
-#          --raw-field "runner_selection-aarch64=${{ inputs.runner_selection-aarch64 }}" \
-#          --raw-field "runner_selection-x86_64=${{ inputs.runner_selection-x86_64 }}" \
-#          --repo "DaverSomethingSomethingOrg/conan-build-container" \
-#          --ref "main" \
-#          conan-build-container.yml
+  bootstrap_container_image:
+    uses: ./.github/workflows/conan-build-container.yml
+    secrets: inherit
+    with:
+      enable_build_images: false
+      container_push: true
+      almalinux-aarch64-enabled: "${{ inputs.almalinux-aarch64-enabled }}"
+      almalinux-x86_64-enabled: "${{ inputs.almalinux-x86_64-enabled }}"
+      ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
+      ubuntu-x86_64-enabled: "${{ inputs.ubuntu-x86_64-enabled }}"
+      runner_selection-aarch64: "${{ inputs.runner_selection-aarch64 }}"
+      runner_selection-x86_64: "${{ inputs.runner_selection-x86_64 }}"
 
   toolchain_phase1:
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-multiPlatformToolchain.yml@main
     secrets: inherit
-    needs: trigger_bootstrap_container_image
+    needs: bootstrap_container_image
     with:
       component_subdirectory: "demos/gcc-toolchain/phase1"
       save_cache_prefix: "toolchain_phase1-${{ github.run_id }}"
@@ -160,49 +127,16 @@ jobs:
       almalinux-x86_64-enabled: ${{ inputs.almalinux-x86_64-enabled }}
       almalinux-x86_64-image: "nexus.homelab/conan-base-almalinux:x86_64-latest"
 
-  trigger_build_container_image:
+  build_container_image:
+    uses: ./.github/workflows/conan-build-container.yml
+    secrets: inherit
     needs: toolchain_phase3
-    runs-on: ${{ inputs.runner_selection-x86_64 }}
-#    container:
-#      image: "nexus.homelab/conan-build-ubuntu:aarch64-latest"
-#      credentials:
-##        username: ${{ github.actor }}
-##        password: ${{ secrets.GITHUB_TOKEN }}
-#        username: ${{ vars.NEXUS_CI_USER }}
-#        password: ${{ secrets.NEXUS_CI_PASSWORD }
-    steps:
-    - name: Trigger Conan Build Container Builds
-#      if: ${{ inputs.trigger_container_builds }}
-      uses: the-actions-org/workflow-dispatch@v4
-      with:
-        wait-for-completion: true
-        token: ${{ secrets.MY_GH_TOKEN }}
-        workflow: conan-build-container.yml
-        repo: DaverSomethingSomethingOrg/conan-build-container
-        ref: main
-        inputs: |
-          { "enable_build_images": true,
-            "container_push": true,
-            "almalinux-aarch64-enabled": "${{ inputs.almalinux-aarch64-enabled }}",
-            "almalinux-x86_64-enabled": "${{ inputs.almalinux-x86_64-enabled }}",
-            "ubuntu-aarch64-enabled": "${{ inputs.ubuntu-aarch64-enabled }}",
-            "ubuntu-x86_64-enabled": "${{ inputs.ubuntu-x86_64-enabled }}",
-            "runner_selection-aarch64": "${{ inputs.runner_selection-aarch64 }}",
-            "runner_selection-x86_64": "${{ inputs.runner_selection-x86_64 }}"
-          }
-
-#      env:
-#        GH_TOKEN: ${{ secrets.MY_GH_TOKEN }}
-#      run: |
-#        gh workflow run \
-#          --raw-field "enable_build_images=true" \
-#          --raw-field "container_push=true" \
-#          --raw-field "almalinux-aarch64-enabled=${{ inputs.almalinux-aarch64-enabled }}" \
-#          --raw-field "almalinux-x86_64-enabled=${{ inputs.almalinux-x86_64-enabled }}" \
-#          --raw-field "ubuntu-aarch64-enabled=${{ inputs.ubuntu-aarch64-enabled }}" \
-#          --raw-field "ubuntu-x86_64-enabled=${{ inputs.ubuntu-x86_64-enabled }}" \
-#          --raw-field "runner_selection-aarch64=${{ inputs.runner_selection-aarch64 }}" \
-#          --raw-field "runner_selection-x86_64=${{ inputs.runner_selection-x86_64 }}" \
-#          --repo "DaverSomethingSomethingOrg/conan-build-container" \
-#          --ref "main" \
-#          conan-build-container.yml
+    with:
+      enable_build_images: true
+      container_push: true
+      almalinux-aarch64-enabled: "${{ inputs.almalinux-aarch64-enabled }}"
+      almalinux-x86_64-enabled: "${{ inputs.almalinux-x86_64-enabled }}"
+      ubuntu-aarch64-enabled: "${{ inputs.ubuntu-aarch64-enabled }}"
+      ubuntu-x86_64-enabled: "${{ inputs.ubuntu-x86_64-enabled }}"
+      runner_selection-aarch64: "${{ inputs.runner_selection-aarch64 }}"
+      runner_selection-x86_64: "${{ inputs.runner_selection-x86_64 }}"
