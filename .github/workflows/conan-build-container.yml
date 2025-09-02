@@ -33,6 +33,9 @@ on:
       runner_selection-x86_64:
         type: string
         default: linux-x86_64
+      toolchain_prefix:
+        type: string
+        default: '/opt/toolchain'
   workflow_call:
     inputs:
       enable_build_images:
@@ -59,6 +62,9 @@ on:
       runner_selection-x86_64:
         type: string
         default: linux-x86_64
+      toolchain_prefix:
+        type: string
+        default: '/opt/toolchain'
 
 jobs:
   conan-base-multiPlatform:
@@ -70,30 +76,35 @@ jobs:
           - image_tag: "nexus.homelab/conan-base-almalinux:aarch64-latest"
             is_enabled: ${{ inputs.almalinux-aarch64-enabled }}
             runner_selection: ${{ inputs.runner_selection-aarch64 }}
+            container_image: "nexus.homelab/conan-docker-build-almalinux:aarch64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/almalinux"
             package_prefix: 'opt-toolchain-'
           - image_tag: "nexus.homelab/conan-base-almalinux:x86_64-latest"
             is_enabled: ${{ inputs.almalinux-x86_64-enabled }}
             runner_selection: ${{ inputs.runner_selection-x86_64 }}
+            container_image: "nexus.homelab/conan-docker-build-almalinux:x86_64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/almalinux"
             package_prefix: 'opt-toolchain-'
           - image_tag: "nexus.homelab/conan-base-ubuntu:aarch64-latest"
             is_enabled: ${{ inputs.ubuntu-aarch64-enabled }}
             runner_selection: ${{ inputs.runner_selection-aarch64 }}
+            container_image: "nexus.homelab/conan-docker-build-ubuntu:aarch64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/ubuntu"
             package_prefix: 'opt+toolchain-'
           - image_tag: "nexus.homelab/conan-base-ubuntu:x86_64-latest"
             is_enabled: ${{ inputs.ubuntu-x86_64-enabled }}
             runner_selection: ${{ inputs.runner_selection-x86_64 }}
+            container_image: "nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/ubuntu"
             package_prefix: 'opt+toolchain-'
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/docker-singlePlatform.yml@main
     with:
       is_enabled: ${{ matrix.is_enabled }}
       runner_selection: ${{ matrix.runner_selection }}
-      toolchain_prefix: '/opt/toolchain'
+      toolchain_prefix: ${{ inputs.toolchain_prefix }}
       build_target: 'conan-base'
       image_tag: ${{ matrix.image_tag }}
+      container_image: ${{ matrix.container_image }}
       docker_context: ${{ matrix.docker_context }}
       package_prefix: ${{ matrix.package_prefix }}
       container_registry: ${{ vars.NEXUS_REGISTRY }}
@@ -115,21 +126,25 @@ jobs:
           - image_tag: "nexus.homelab/conan-bootstrap-almalinux:aarch64-latest"
             is_enabled: ${{ inputs.almalinux-aarch64-enabled }}
             runner_selection: ${{ inputs.runner_selection-aarch64 }}
+            container_image: "nexus.homelab/conan-docker-build-almalinux:aarch64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/almalinux"
             package_prefix: 'opt-toolchain-'
           - image_tag: "nexus.homelab/conan-bootstrap-almalinux:x86_64-latest"
             is_enabled: ${{ inputs.almalinux-x86_64-enabled }}
             runner_selection: ${{ inputs.runner_selection-x86_64 }}
+            container_image: "nexus.homelab/conan-docker-build-almalinux:x86_64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/almalinux"
             package_prefix: 'opt-toolchain-'
           - image_tag: "nexus.homelab/conan-bootstrap-ubuntu:aarch64-latest"
             is_enabled: ${{ inputs.ubuntu-aarch64-enabled }}
             runner_selection: ${{ inputs.runner_selection-aarch64 }}
+            container_image: "nexus.homelab/conan-docker-build-ubuntu:aarch64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/ubuntu"
             package_prefix: 'opt+toolchain-'
           - image_tag: "nexus.homelab/conan-bootstrap-ubuntu:x86_64-latest"
             is_enabled: ${{ inputs.ubuntu-x86_64-enabled }}
             runner_selection: ${{ inputs.runner_selection-x86_64 }}
+            container_image: "nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/ubuntu"
             package_prefix: 'opt+toolchain-'
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/docker-singlePlatform.yml@main
@@ -139,6 +154,7 @@ jobs:
       toolchain_prefix: '/opt/toolchain'
       build_target: 'conan-bootstrap'
       image_tag: ${{ matrix.image_tag }}
+      container_image: ${{ matrix.container_image }}
       docker_context: ${{ matrix.docker_context }}
       package_prefix: ${{ matrix.package_prefix }}
       container_registry: ${{ vars.NEXUS_REGISTRY }}
@@ -161,21 +177,25 @@ jobs:
           - image_tag: "nexus.homelab/conan-build-almalinux:aarch64-latest"
             is_enabled: ${{ inputs.almalinux-aarch64-enabled }}
             runner_selection: ${{ inputs.runner_selection-aarch64 }}
+            container_image: "nexus.homelab/conan-docker-build-almalinux:aarch64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/almalinux"
             package_prefix: 'opt-toolchain-'
           - image_tag: "nexus.homelab/conan-build-almalinux:x86_64-latest"
             is_enabled: ${{ inputs.almalinux-x86_64-enabled }}
             runner_selection: ${{ inputs.runner_selection-x86_64 }}
+            container_image: "nexus.homelab/conan-docker-build-almalinux:x86_64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/almalinux"
             package_prefix: 'opt-toolchain-'
           - image_tag: "nexus.homelab/conan-build-ubuntu:aarch64-latest"
             is_enabled: ${{ inputs.ubuntu-aarch64-enabled }}
             runner_selection: ${{ inputs.runner_selection-aarch64 }}
+            container_image: "nexus.homelab/conan-docker-build-ubuntu:aarch64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/ubuntu"
             package_prefix: 'opt+toolchain-'
           - image_tag: "nexus.homelab/conan-build-ubuntu:x86_64-latest"
             is_enabled: ${{ inputs.ubuntu-x86_64-enabled }}
             runner_selection: ${{ inputs.runner_selection-x86_64 }}
+            container_image: "nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/ubuntu"
             package_prefix: 'opt+toolchain-'
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/docker-singlePlatform.yml@main
@@ -185,6 +205,7 @@ jobs:
       toolchain_prefix: '/opt/toolchain'
       build_target: 'conan-build'
       image_tag: ${{ matrix.image_tag }}
+      container_image: ${{ matrix.container_image }}
       docker_context: ${{ matrix.docker_context }}
       package_prefix: ${{ matrix.package_prefix }}
       container_registry: ${{ vars.NEXUS_REGISTRY }}
@@ -207,21 +228,25 @@ jobs:
           - image_tag: "nexus.homelab/conan-docker-build-almalinux:aarch64-latest"
             is_enabled: ${{ inputs.almalinux-aarch64-enabled }}
             runner_selection: ${{ inputs.runner_selection-aarch64 }}
+            container_image: "nexus.homelab/conan-docker-build-almalinux:aarch64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/almalinux"
             package_prefix: 'opt-toolchain-'
           - image_tag: "nexus.homelab/conan-docker-build-almalinux:x86_64-latest"
             is_enabled: ${{ inputs.almalinux-x86_64-enabled }}
             runner_selection: ${{ inputs.runner_selection-x86_64 }}
+            container_image: "nexus.homelab/conan-docker-build-almalinux:x86_64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/almalinux"
             package_prefix: 'opt-toolchain-'
           - image_tag: "nexus.homelab/conan-docker-build-ubuntu:aarch64-latest"
             is_enabled: ${{ inputs.ubuntu-aarch64-enabled }}
             runner_selection: ${{ inputs.runner_selection-aarch64 }}
+            container_image: "nexus.homelab/conan-docker-build-ubuntu:aarch64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/ubuntu"
             package_prefix: 'opt+toolchain-'
           - image_tag: "nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
             is_enabled: ${{ inputs.ubuntu-x86_64-enabled }}
             runner_selection: ${{ inputs.runner_selection-x86_64 }}
+            container_image: "nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
             docker_context: "demos/gcc-toolchain/conan-build-container/src/ubuntu"
             package_prefix: 'opt+toolchain-'
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/docker-singlePlatform.yml@main
@@ -231,6 +256,7 @@ jobs:
       toolchain_prefix: '/opt/toolchain'
       build_target: 'conan-docker-build'
       image_tag: ${{ matrix.image_tag }}
+      container_image: ${{ matrix.container_image }}
       docker_context: ${{ matrix.docker_context }}
       package_prefix: ${{ matrix.package_prefix }}
       container_registry: ${{ vars.NEXUS_REGISTRY }}
