@@ -15,6 +15,7 @@ RUN apt-get update \
       vim \
       less \
       build-essential \
+      pkgconf \
       dpkg-dev \
       devscripts \
       debhelper \
@@ -48,7 +49,7 @@ ENV CC=gcc
 ENV CXX=g++
 
 # Make sure VIRTUAL_ENV PATH is always ahead of any other path to python
-ENV VIRTUAL_ENV=/opt/python-venv
+ENV VIRTUAL_ENV=/opt/conan-venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 

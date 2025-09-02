@@ -61,8 +61,7 @@ on:
         default: linux-x86_64
 
 jobs:
-  conan-base:
-    name: conan-base-${{ matrix.os_name }}:${{ matrix.arch }}-latest
+  conan-base-multiPlatform:
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -106,8 +105,7 @@ jobs:
       install_keyring: ${{ secrets.NEXUS_APT_KEYRING }}
       install_ca: ${{ secrets.NEXUS_INTERNAL_CA }}
 
-  conan-bootstrap:
-    name: conan-bootstrap-${{ matrix.os_name }}:${{ matrix.arch }}-latest
+  conan-bootstrap-multiPlatform:
     needs: conan-base
     strategy:
       fail-fast: false
@@ -152,8 +150,7 @@ jobs:
       install_keyring: ${{ secrets.NEXUS_APT_KEYRING }}
       install_ca: ${{ secrets.NEXUS_INTERNAL_CA }}
 
-  conan-build:
-    name: conan-build-${{ matrix.os_name }}:${{ matrix.arch }}-latest
+  conan-build-multiPlatform:
     if: ${{ inputs.enable_build_images }}
     needs: conan-bootstrap
     strategy:
@@ -199,8 +196,7 @@ jobs:
       install_keyring: ${{ secrets.NEXUS_APT_KEYRING }}
       install_ca: ${{ secrets.NEXUS_INTERNAL_CA }}
  
-  conan-docker-build:
-    name: conan-docker-build-${{ matrix.os_name }}:${{ matrix.arch }}-latest
+  conan-docker-build-multiPlatform:
     if: ${{ inputs.enable_build_images }}
     needs: conan-build
     strategy:

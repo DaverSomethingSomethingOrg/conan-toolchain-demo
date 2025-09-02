@@ -16,6 +16,7 @@ RUN dnf install -y 'dnf-command(config-manager)' yum-utils \
     python3-pip \
     python-unversioned-command.noarch \
     wget \
+    pkgconf-pkg-config \
     rpmdevtools \
     rpmlint \
     perl-File-Compare \
@@ -46,7 +47,7 @@ ENV CC=gcc
 ENV CXX=g++
 
 # Make sure VIRTUAL_ENV PATH is always ahead of any other path to python
-ENV VIRTUAL_ENV="/opt/python-venv"
+ENV VIRTUAL_ENV="/opt/conan-venv"
 RUN python3 -m venv "${VIRTUAL_ENV}"
 ENV PATH="${VIRTUAL_ENV}/bin:${MINIMAL_PATH}"
 

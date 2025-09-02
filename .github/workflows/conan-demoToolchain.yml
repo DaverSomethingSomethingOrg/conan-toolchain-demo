@@ -24,7 +24,7 @@ on:
         type: string
       conan_local_recipes:
         type: string
-        default: "demos/gcc-toolchain/gcc-toolchain-recipes"
+        default: "conan-center-index"
       conan_local_repo:
         type: string
         default: "http://nexus.homelab/repository/conan-homelab/"
