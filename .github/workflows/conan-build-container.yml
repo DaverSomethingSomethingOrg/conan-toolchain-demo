@@ -106,7 +106,7 @@ jobs:
       install_ca: ${{ secrets.NEXUS_INTERNAL_CA }}
 
   conan-bootstrap-multiPlatform:
-    needs: conan-base
+    needs: conan-base-multiPlatform
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -152,7 +152,7 @@ jobs:
 
   conan-build-multiPlatform:
     if: ${{ inputs.enable_build_images }}
-    needs: conan-bootstrap
+    needs: conan-bootstrap-multiPlatform
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -198,7 +198,7 @@ jobs:
  
   conan-docker-build-multiPlatform:
     if: ${{ inputs.enable_build_images }}
-    needs: conan-build
+    needs: conan-build-multiPlatform
     strategy:
       fail-fast: false
       max-parallel: 4
