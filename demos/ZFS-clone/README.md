@@ -10,6 +10,10 @@ sharing a Conan cache that is not concurrent-safe.
 
 ## [`init.sh`](./init.sh)
 
+Nothing special here, just (re)initializing our ZFS pool on our HomeLab
+server's NVMe SSD for this demo.  Turning off `atime` is important for
+maximum performance!
+
 ```bash
 ❯ sudo ./init.sh
 ❯ zfs list -r -o name,used,avail,refer
