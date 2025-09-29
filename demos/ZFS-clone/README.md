@@ -54,7 +54,7 @@ the following:
   and GCC toolchain installation.
 - Promotes a successful build to represent the preferred branch cache.
 - Offers an option to save a broken build's clone and snapshot in place
-  for troubleshooting.  Destroys the broken build otherwise.
+  for troubleshooting.  Destroys the broken build's cache clone otherwise.
 
 ```bash
 ❯ time ./server_run.sh 13 0 2>&1 | tee ../../../server_run.sh.log

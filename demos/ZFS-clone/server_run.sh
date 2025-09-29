@@ -87,7 +87,6 @@ fi
 set -x
 
 if [ ${retval} -eq 0 ]; then
-    # Build succeeded - Promote build clone to branch@latest
     echo "SUCCESS! Updating snapshot"
 
     # Promote our successful build and rename it to replace our previous
@@ -99,7 +98,6 @@ if [ ${retval} -eq 0 ]; then
     sudo zfs destroy "${BRANCH_DATASET}-legacy"
     sudo zfs destroy "${BUILD_SNAPSHOT}"
 else
-    # Build failed - rollback to previous state using "latest" snapshot
     echo "FAILURE!"
 
     # If not configured to save broken builds, destroy the broken clone
