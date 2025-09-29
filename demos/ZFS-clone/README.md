@@ -27,8 +27,8 @@ the toolchain build.  It configures our profile, remotes and executes
 `conan install --build=missing [...]`
 
 ```bash
-# DOCKER_IMAGE="nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
-# docker run -it --rm \
+❯ DOCKER_IMAGE="nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
+❯ docker run -it --rm \
     --volume="/${BUILD_CLONE}:${CONTAINER_CONAN_HOME}" \
     --volume="${SERVER_WORKSPACE_ROOT}:${CONTAINER_WORKSPACE_ROOT}" \
     --env="CONAN_HOME=${CONTAINER_CONAN_HOME}" \
@@ -53,5 +53,5 @@ the following:
   for troubleshooting.  Destroys the broken build otherwise.
 
 ```bash
-# time ./server_run.sh 13 0 2>&1 | tee ../../../server_run.sh.log
+❯ time ./server_run.sh 13 0 2>&1 | tee ../../../server_run.sh.log
 ```
