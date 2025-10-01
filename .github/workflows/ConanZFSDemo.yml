@@ -19,6 +19,10 @@ on:
 jobs:
   create_ZFS_clone:
     runs-on: 'linux-x86_64'
+    outputs:
+      ZFS_BUILD_CLONE: ${{ steps.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}
+      ZFS_BRANCH_DATASET: ${{ steps.create_ZFS_clone.outputs.ZFS_BRANCH_DATASET }}
+      ZFS_BUILD_SNAPSHOT: ${{ steps.create_ZFS_clone.outputs.ZFS_BUILD_SNAPSHOT }}
     steps:
     - name: Create ZFS clone
       id: create_ZFS_clone
@@ -35,9 +39,9 @@ jobs:
         ZFS_BUILD_CLONE="${ZFS_BRANCH_DATASET}_${JOB_HOST}-${GITHUB_RUN_ID}"
         ZFS_BUILD_SNAPSHOT="${ZFS_BRANCH_DATASET}@${JOB_HOST}-pre${GITHUB_RUN_ID}"
 
-        echo "ZFS_BUILD_CLONE=${ZFS_BUILD_CLONE}" >> "$GITHUB_ENV"
-        echo "ZFS_BRANCH_DATASET=${ZFS_BRANCH_DATASET}" >> "$GITHUB_ENV"
-        echo "ZFS_BUILD_SNAPSHOT=${ZFS_BUILD_SNAPSHOT}" >> "$GITHUB_ENV"
+        echo "ZFS_BUILD_CLONE=${ZFS_BUILD_CLONE}" >> "$GITHUB_OUTPUT"
+        echo "ZFS_BRANCH_DATASET=${ZFS_BRANCH_DATASET}" >> "$GITHUB_OUTPUT"
+        echo "ZFS_BUILD_SNAPSHOT=${ZFS_BUILD_SNAPSHOT}" >> "$GITHUB_OUTPUT"
         
         # If our build clone already exists something is wrong..
         CLONE_FOUND=$(sudo zfs list -o name |grep "^${ZFS_BUILD_CLONE}\$")
@@ -73,8 +77,12 @@ jobs:
       upload_packages: false
 
   promote_ZFS_clone:
-    needs: conan_toolchain
+    needs: [create_ZFS_clone, conan_toolchain]
     runs-on: 'linux-x86_64'
+    env:
+      ZFS_BUILD_CLONE: ${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}
+      ZFS_BRANCH_DATASET: ${{ needs.create_ZFS_clone.outputs.ZFS_BRANCH_DATASET }}
+      ZFS_BUILD_SNAPSHOT: ${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_SNAPSHOT }}
     steps:
     - name: Create ZFS clone
       id: create_ZFS_clone
