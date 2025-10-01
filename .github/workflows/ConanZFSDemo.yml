@@ -14,7 +14,7 @@
 name: Conan ZFS Demo using ConanToolchain
 
 on:
-  workflow_call:
+  workflow_dispatch:
 
 jobs:
   create_ZFS_clone:
