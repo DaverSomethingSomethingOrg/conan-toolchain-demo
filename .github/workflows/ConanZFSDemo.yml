@@ -30,31 +30,31 @@ jobs:
         ZPOOL_NAME="zpool-conancache"
 
         # ZFS layout / structure
-        PROJECT_DATASET="${ZPOOL_NAME}/${PROJECT}"
-        BRANCH_DATASET="${PROJECT_DATASET}/${GITHUB_REF_NAME}"
-        BUILD_CLONE="${BRANCH_DATASET}_${JOB_HOST}-${GITHUB_RUN_ID}"
-        BUILD_SNAPSHOT="${BRANCH_DATASET}@${JOB_HOST}-pre${GITHUB_RUN_ID}"
+        ZFS_PROJECT_DATASET="${ZPOOL_NAME}/${PROJECT}"
+        ZFS_BRANCH_DATASET="${ZFS_PROJECT_DATASET}/${GITHUB_REF_NAME}"
+        ZFS_BUILD_CLONE="${ZFS_BRANCH_DATASET}_${JOB_HOST}-${GITHUB_RUN_ID}"
+        ZFS_BUILD_SNAPSHOT="${ZFS_BRANCH_DATASET}@${JOB_HOST}-pre${GITHUB_RUN_ID}"
 
         echo "ZFS_BUILD_CLONE=${ZFS_BUILD_CLONE}" >> $GITHUB_ENV
         echo "ZFS_BRANCH_DATASET=${ZFS_BRANCH_DATASET}" >> $GITHUB_ENV
         echo "ZFS_BUILD_SNAPSHOT=${ZFS_BUILD_SNAPSHOT}" >> $GITHUB_ENV
         
         # If our build clone already exists something is wrong..
-        CLONE_FOUND=$(sudo zfs list -o name |grep "^${BUILD_CLONE}\$")
+        CLONE_FOUND=$(sudo zfs list -o name |grep "^${ZFS_BUILD_CLONE}\$")
         if [ $? -eq 0 ]; then
             echo "ERROR: Build clone already exists.  Cannot proceed!" 1>&2
             exit 1
         fi
 
         # Create our ZFS branch dataset if it doesn't already exist
-        BRANCH_DATASET_FOUND=$(sudo zfs list -o name |grep "^${BRANCH_DATASET}\$")
+        BRANCH_DATASET_FOUND=$(sudo zfs list -o name |grep "^${ZFS_BRANCH_DATASET}\$")
         if [ $? -eq 1 ]; then
             # Use '-p' to create branch dataset if it doesn't exist as well
-            sudo zfs create -p "${BRANCH_DATASET}"
+            sudo zfs create -p "${ZFS_BRANCH_DATASET}"
         fi
 
-        sudo zfs snapshot "${BUILD_SNAPSHOT}"
-        sudo zfs clone "${BUILD_SNAPSHOT}" "${BUILD_CLONE}"
+        sudo zfs snapshot "${ZFS_BUILD_SNAPSHOT}"
+        sudo zfs clone "${ZFS_BUILD_SNAPSHOT}" "${ZFS_BUILD_CLONE}"
 
   conan_toolchain:
     needs: create_ZFS_clone
