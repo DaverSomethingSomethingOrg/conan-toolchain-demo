@@ -23,6 +23,8 @@ jobs:
     - name: Create ZFS clone
       id: create_ZFS_clone
       run: |
+        set +e # Disable exit on error
+
         JOB_HOST="hephaestus"
         PROJECT="gcc12-toolchain"
         ZPOOL_NAME="zpool-conancache"
@@ -44,8 +46,7 @@ jobs:
             exit 1
         fi
 
-        # Create our ZFS branch dataset & 'latest' snapshot if dataset doesn't
-        # already exist
+        # Create our ZFS branch dataset if it doesn't already exist
         BRANCH_DATASET_FOUND=$(sudo zfs list -o name |grep "^${BRANCH_DATASET}\$")
         if [ $? -eq 1 ]; then
             # Use '-p' to create branch dataset if it doesn't exist as well
