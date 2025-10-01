@@ -63,11 +63,9 @@ jobs:
   conan_toolchain:
     needs: create_ZFS_clone
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-toolchain.yml@main
-    env:
-      ZFS_BUILD_CLONE: ${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}
     secrets: inherit
     with:
-      conan_home_host_path: "/${{ env.ZFS_BUILD_CLONE }}"
+      conan_home_host_path: "/${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}"
       runner_selection: 'linux-x86_64'
       component_subdirectory: "demos/gcc-toolchain/phase3"
       conan_local_recipes: "conan-center-index"
