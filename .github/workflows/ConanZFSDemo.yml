@@ -1,0 +1,85 @@
+######################################################################
+# ConanZFSDemo.yml
+#
+# Copyright © 2025 David L. Armstrong
+#
+# This workflow calls the conan-singlePlatform.yml workflow using a
+# pre-allocated OpenZFS clone for our Conan Cache
+#
+# For more information see:
+# - https://daversomethingsomethingorg.github.io/ConanToolchain/latest/ConanZFSDemo/
+# - https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
+#
+
+name: Conan ZFS Demo using ConanToolchain
+
+on:
+  workflow_call:
+
+jobs:
+  create_ZFS_clone:
+    runs-on: 'linux-x86_64'
+    steps:
+    - name: Create ZFS clone
+      id: create_ZFS_clone
+      run: |
+        JOB_HOST="hephaestus"
+        PROJECT="gcc12-toolchain"
+        ZPOOL_NAME="zpool-conancache"
+
+        # ZFS layout / structure
+        PROJECT_DATASET="${ZPOOL_NAME}/${PROJECT}"
+        BRANCH_DATASET="${PROJECT_DATASET}/${GITHUB_REF_NAME}"
+        BUILD_CLONE="${BRANCH_DATASET}_${JOB_HOST}-${BUILD_ID}"
+        BUILD_SNAPSHOT="${BRANCH_DATASET}@${JOB_HOST}-pre${BUILD_ID}"
+
+        echo "ZFS_BUILD_CLONE=${ZFS_BUILD_CLONE}" >> $GITHUB_ENV
+        echo "ZFS_BRANCH_DATASET=${ZFS_BRANCH_DATASET}" >> $GITHUB_ENV
+        echo "ZFS_BUILD_SNAPSHOT=${ZFS_BUILD_SNAPSHOT}" >> $GITHUB_ENV
+        
+        # If our build clone already exists something is wrong..
+        CLONE_FOUND=$(sudo zfs list -o name |grep "^${BUILD_CLONE}\$")
+        if [ $? -eq 0 ]; then
+            echo "ERROR: Build clone already exists.  Cannot proceed!" 1>&2
+            exit 1
+        fi
+
+        # Create our ZFS branch dataset & 'latest' snapshot if dataset doesn't
+        # already exist
+        BRANCH_DATASET_FOUND=$(sudo zfs list -o name |grep "^${BRANCH_DATASET}\$")
+        if [ $? -eq 1 ]; then
+            # Use '-p' to create branch dataset if it doesn't exist as well
+            sudo zfs create -p "${BRANCH_DATASET}"
+        fi
+
+        sudo zfs snapshot "${BUILD_SNAPSHOT}"
+        sudo zfs clone "${BUILD_SNAPSHOT}" "${BUILD_CLONE}"
+
+  conan_toolchain:
+    needs: create_ZFS_clone
+    uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-toolchain.yml@main
+    secrets: inherit
+    with:
+      conan_home: "/CONAN_HOME"
+      runner_selection: 'linux-x86_64'
+      component_subdirectory: "demos/gcc-toolchain/phase3"
+      conan_local_recipes: "conan-center-index"
+      conan_local_repo: "http://nexus.homelab/repository/conan-homelab/"
+      toolchain_prefix: "/opt/toolchain"
+      container_image: "nexus.homelab/conan-build-ubuntu:aarch64-latest"
+      is_enabled: true
+      conan_deployer: 'deb_deployer'
+      upload_packages: false
+
+  promote_ZFS_clone:
+    needs: conan_toolchain
+    runs-on: 'linux-x86_64'
+    steps:
+    - name: Create ZFS clone
+      id: create_ZFS_clone
+      run: |
+        sudo zfs promote "${ZFS_BUILD_CLONE}"
+        sudo zfs rename "${ZFS_BRANCH_DATASET}" "${ZFS_BRANCH_DATASET}-legacy"
+        sudo zfs rename "${ZFS_BUILD_CLONE}" "${ZFS_BRANCH_DATASET}"
+        sudo zfs destroy "${ZFS_BRANCH_DATASET}-legacy"
+        sudo zfs destroy "${ZFS_BUILD_SNAPSHOT}"
