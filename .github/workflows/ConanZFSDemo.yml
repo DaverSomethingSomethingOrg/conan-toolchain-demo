@@ -35,9 +35,9 @@ jobs:
         ZFS_BUILD_CLONE="${ZFS_BRANCH_DATASET}_${JOB_HOST}-${GITHUB_RUN_ID}"
         ZFS_BUILD_SNAPSHOT="${ZFS_BRANCH_DATASET}@${JOB_HOST}-pre${GITHUB_RUN_ID}"
 
-        echo "ZFS_BUILD_CLONE=${ZFS_BUILD_CLONE}" >> $GITHUB_ENV
-        echo "ZFS_BRANCH_DATASET=${ZFS_BRANCH_DATASET}" >> $GITHUB_ENV
-        echo "ZFS_BUILD_SNAPSHOT=${ZFS_BUILD_SNAPSHOT}" >> $GITHUB_ENV
+        echo "ZFS_BUILD_CLONE=${ZFS_BUILD_CLONE}" >> "$GITHUB_ENV"
+        echo "ZFS_BRANCH_DATASET=${ZFS_BRANCH_DATASET}" >> "$GITHUB_ENV"
+        echo "ZFS_BUILD_SNAPSHOT=${ZFS_BUILD_SNAPSHOT}" >> "$GITHUB_ENV"
         
         # If our build clone already exists something is wrong..
         CLONE_FOUND=$(sudo zfs list -o name |grep "^${ZFS_BUILD_CLONE}\$")
@@ -79,6 +79,8 @@ jobs:
     - name: Create ZFS clone
       id: create_ZFS_clone
       run: |
+        set +e # Disable exit on error
+        set -x # Debugging
         sudo zfs promote "${ZFS_BUILD_CLONE}"
         sudo zfs rename "${ZFS_BRANCH_DATASET}" "${ZFS_BRANCH_DATASET}-legacy"
         sudo zfs rename "${ZFS_BUILD_CLONE}" "${ZFS_BRANCH_DATASET}"
