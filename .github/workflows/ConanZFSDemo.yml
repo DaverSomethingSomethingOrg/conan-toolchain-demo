@@ -67,7 +67,7 @@ jobs:
       conan_local_recipes: "conan-center-index"
       conan_local_repo: "http://nexus.homelab/repository/conan-homelab/"
       toolchain_prefix: "/opt/toolchain"
-      container_image: "nexus.homelab/conan-build-ubuntu:aarch64-latest"
+      container_image: "nexus.homelab/conan-build-ubuntu:x86_64-latest"
       is_enabled: true
       conan_deployer: 'deb_deployer'
       upload_packages: false
