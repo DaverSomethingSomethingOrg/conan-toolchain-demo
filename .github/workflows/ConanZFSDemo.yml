@@ -15,6 +15,16 @@ name: Conan ZFS Demo using ConanToolchain
 
 on:
   workflow_dispatch:
+    inputs:
+      component_subdirectory:
+        type: string
+        default: "demos/ZFS-clone"
+      promote_enabled:
+        type: boolean
+        default: true
+      save_broken_build:
+        type: boolean
+        default: true
 
 jobs:
   create_ZFS_clone:
@@ -67,7 +77,7 @@ jobs:
     with:
       conan_home_host_path: "/${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}"
       runner_selection: 'linux-x86_64'
-      component_subdirectory: "demos/gcc-toolchain/phase3"
+      component_subdirectory: "${{ inputs.component_subdirectory }}"
       conan_local_recipes: "conan-center-index"
       conan_local_repo: "http://nexus.homelab/repository/conan-homelab/"
       toolchain_prefix: "/opt/toolchain"
@@ -76,7 +86,8 @@ jobs:
       conan_deployer: 'deb_deployer'
       upload_packages: false
 
-  promote_ZFS_clone:
+  cleanup_broken_build:
+    if: ${{ always() && ! inputs.save_broken_build && needs.conan_toolchain.result == 'failure' }}
     needs: [create_ZFS_clone, conan_toolchain]
     runs-on: 'linux-x86_64'
     env:
@@ -88,7 +99,22 @@ jobs:
       id: create_ZFS_clone
       run: |
         set +e # Disable exit on error
-        set -x # Debugging
+        sudo zfs destroy "${ZFS_BRANCH_DATASET}-legacy"
+        sudo zfs destroy "${ZFS_BUILD_SNAPSHOT}"
+
+  promote_ZFS_clone:
+    if: ${{ inputs.promote_enabled }}
+    needs: [create_ZFS_clone, conan_toolchain]
+    runs-on: 'linux-x86_64'
+    env:
+      ZFS_BUILD_CLONE: ${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}
+      ZFS_BRANCH_DATASET: ${{ needs.create_ZFS_clone.outputs.ZFS_BRANCH_DATASET }}
+      ZFS_BUILD_SNAPSHOT: ${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_SNAPSHOT }}
+    steps:
+    - name: Create ZFS clone
+      id: create_ZFS_clone
+      run: |
+        set +e # Disable exit on error
         sudo zfs promote "${ZFS_BUILD_CLONE}"
         sudo zfs rename "${ZFS_BRANCH_DATASET}" "${ZFS_BRANCH_DATASET}-legacy"
         sudo zfs rename "${ZFS_BUILD_CLONE}" "${ZFS_BRANCH_DATASET}"
