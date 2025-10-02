@@ -26,8 +26,11 @@ on:
         type: boolean
         default: true
       conan_local_repo:
-        type: string
+        type: choice
         default: "http://nexus.homelab/repository/conan-homelab/"
+        options:
+          - "http://nexus.homelab/repository/conan-homelab/"
+          - "undefined"
 
 jobs:
   create_ZFS_clone:
