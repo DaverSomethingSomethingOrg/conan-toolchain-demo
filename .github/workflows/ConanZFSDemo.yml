@@ -25,6 +25,9 @@ on:
       save_broken_build:
         type: boolean
         default: true
+      conan_local_repo:
+        type: string
+        default: "http://nexus.homelab/repository/conan-homelab/"
 
 jobs:
   create_ZFS_clone:
@@ -79,7 +82,7 @@ jobs:
       runner_selection: 'linux-x86_64'
       component_subdirectory: "${{ inputs.component_subdirectory }}"
       conan_local_recipes: "conan-center-index"
-      conan_local_repo: "http://nexus.homelab/repository/conan-homelab/"
+      conan_local_repo: "${{ inputs.conan_local_repo }}"
       toolchain_prefix: "/opt/toolchain"
       container_image: "nexus.homelab/conan-build-ubuntu:x86_64-latest"
       is_enabled: true
