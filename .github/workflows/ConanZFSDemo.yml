@@ -105,7 +105,7 @@ jobs:
       id: create_ZFS_clone
       run: |
         set +e # Disable exit on error
-        sudo zfs destroy "${ZFS_BRANCH_DATASET}-legacy"
+        sudo zfs destroy "${ZFS_BUILD_CLONE}"
         sudo zfs destroy "${ZFS_BUILD_SNAPSHOT}"
 
   promote_ZFS_clone:
