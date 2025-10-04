@@ -55,6 +55,7 @@ jobs:
         ZFS_BUILD_CLONE="${ZFS_BRANCH_DATASET}_${JOB_HOST}-${GITHUB_RUN_ID}"
         ZFS_BUILD_SNAPSHOT="${ZFS_BRANCH_DATASET}@${JOB_HOST}-pre${GITHUB_RUN_ID}"
 
+        # We'll need these for the other workflow jobs
         echo "ZFS_BUILD_CLONE=${ZFS_BUILD_CLONE}" >> "$GITHUB_OUTPUT"
         echo "ZFS_BRANCH_DATASET=${ZFS_BRANCH_DATASET}" >> "$GITHUB_OUTPUT"
         echo "ZFS_BUILD_SNAPSHOT=${ZFS_BUILD_SNAPSHOT}" >> "$GITHUB_OUTPUT"
@@ -73,6 +74,7 @@ jobs:
             sudo zfs create -p "${ZFS_BRANCH_DATASET}"
         fi
 
+        # Finally, set up the snapshot and clone.
         sudo zfs snapshot "${ZFS_BUILD_SNAPSHOT}"
         sudo zfs clone "${ZFS_BUILD_SNAPSHOT}" "${ZFS_BUILD_CLONE}"
 
@@ -101,8 +103,8 @@ jobs:
       ZFS_BRANCH_DATASET: ${{ needs.create_ZFS_clone.outputs.ZFS_BRANCH_DATASET }}
       ZFS_BUILD_SNAPSHOT: ${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_SNAPSHOT }}
     steps:
-    - name: Create ZFS clone
-      id: create_ZFS_clone
+    - name: Cleanup ZFS clone
+      id: cleanup_ZFS_clone
       run: |
         set +e # Disable exit on error
         sudo zfs destroy "${ZFS_BUILD_CLONE}"
@@ -117,8 +119,8 @@ jobs:
       ZFS_BRANCH_DATASET: ${{ needs.create_ZFS_clone.outputs.ZFS_BRANCH_DATASET }}
       ZFS_BUILD_SNAPSHOT: ${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_SNAPSHOT }}
     steps:
-    - name: Create ZFS clone
-      id: create_ZFS_clone
+    - name: Promote ZFS clone
+      id: promote_ZFS_clone
       run: |
         set +e # Disable exit on error
         sudo zfs promote "${ZFS_BUILD_CLONE}"
