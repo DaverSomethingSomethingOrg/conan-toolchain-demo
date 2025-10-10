@@ -20,7 +20,7 @@ on:
         default: linux-aarch64
       runner_selection-x86_64:
         type: string
-        default: linux-x86_64
+        default: linux-x86-64
       conan_recipe_remote:
         type: string
         default: "./demos/ThreeDSuite/conan-center-local"
