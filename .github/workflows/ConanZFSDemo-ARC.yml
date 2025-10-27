@@ -11,7 +11,7 @@
 # - https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
 #
 
-name: Conan ZFS Demo using ConanToolchain
+name: Conan ZFS ARC Demo using ConanToolchain
 
 on:
   workflow_dispatch:
