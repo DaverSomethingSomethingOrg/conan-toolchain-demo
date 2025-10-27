@@ -1,0 +1,49 @@
+######################################################################
+# ConanZFSDemo-ARC.yml
+#
+# Copyright © 2025 David L. Armstrong
+#
+# This workflow calls the conan-singlePlatform.yml workflow using a
+# OpenZFS clone PVC provided by the runner Pod spec for our Conan Cache
+#
+# For more information see:
+# - https://daversomethingsomethingorg.github.io/ConanToolchain/latest/ConanZFSDemo/
+# - https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
+#
+
+name: Conan ZFS Demo using ConanToolchain
+
+on:
+  workflow_dispatch:
+    inputs:
+      component_subdirectory:
+        type: string
+        default: "demos/ZFS-clone"
+      promote_enabled:
+        type: boolean
+        default: true
+      save_broken_build:
+        type: boolean
+        default: true
+      conan_local_repo:
+        type: choice
+        default: "http://nexus.homelab/repository/conan-homelab/"
+        options:
+          - "http://nexus.homelab/repository/conan-homelab/"
+          - "undefined"
+
+jobs:
+  conan_toolchain:
+    uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-toolchain.yml@main
+    secrets: inherit
+    with:
+      conan_home: "/CONAN_HOME"
+      runner_selection: 'linux-x86-64'
+      component_subdirectory: "${{ inputs.component_subdirectory }}"
+      conan_local_recipes: "conan-center-index"
+      conan_local_repo: "${{ inputs.conan_local_repo }}"
+      toolchain_prefix: "/opt/toolchain"
+      container_image: "nexus.homelab/conan-build-ubuntu:x86_64-latest"
+      is_enabled: true
+      conan_deployer: 'deb_deployer'
+      upload_packages: false

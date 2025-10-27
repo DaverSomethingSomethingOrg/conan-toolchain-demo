@@ -34,7 +34,7 @@ on:
 
 jobs:
   create_ZFS_clone:
-    runs-on: 'linux-x86-64'
+    runs-on: 'hephaestus-shell'
     outputs:
       ZFS_BUILD_CLONE: ${{ steps.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}
       ZFS_BRANCH_DATASET: ${{ steps.create_ZFS_clone.outputs.ZFS_BRANCH_DATASET }}
@@ -84,7 +84,7 @@ jobs:
     secrets: inherit
     with:
       conan_home_host_path: "/${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}"
-      runner_selection: 'linux-x86-64'
+      runner_selection: 'hephaestus-shell'
       component_subdirectory: "${{ inputs.component_subdirectory }}"
       conan_local_recipes: "conan-center-index"
       conan_local_repo: "${{ inputs.conan_local_repo }}"
@@ -97,7 +97,7 @@ jobs:
   cleanup_broken_build:
     if: ${{ always() && ! inputs.save_broken_build && needs.conan_toolchain.result == 'failure' }}
     needs: [create_ZFS_clone, conan_toolchain]
-    runs-on: 'linux-x86-64'
+    runs-on: 'hephaestus-shell'
     env:
       ZFS_BUILD_CLONE: ${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}
       ZFS_BRANCH_DATASET: ${{ needs.create_ZFS_clone.outputs.ZFS_BRANCH_DATASET }}
@@ -113,7 +113,7 @@ jobs:
   promote_ZFS_clone:
     if: ${{ inputs.promote_enabled }}
     needs: [create_ZFS_clone, conan_toolchain]
-    runs-on: 'linux-x86-64'
+    runs-on: 'hephaestus-shell'
     env:
       ZFS_BUILD_CLONE: ${{ needs.create_ZFS_clone.outputs.ZFS_BUILD_CLONE }}
       ZFS_BRANCH_DATASET: ${{ needs.create_ZFS_clone.outputs.ZFS_BRANCH_DATASET }}

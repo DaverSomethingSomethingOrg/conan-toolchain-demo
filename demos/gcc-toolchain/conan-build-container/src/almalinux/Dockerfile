@@ -1,5 +1,13 @@
 FROM almalinux:latest AS conan-base
 
+LABEL org.opencontainers.image.source="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo"
+LABEL org.opencontainers.image.path="demos/gcc-toolchain/conan-build-container/src/almalinux/Dockerfile"
+#LABEL org.opencontainers.image.title=""
+LABEL org.opencontainers.image.description="An AlmaLinux based image for building Conan Center Index packages"
+LABEL org.opencontainers.image.authors="David L. Armstrong (@daversomethingsomething)"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+LABEL org.opencontainers.image.documentation="https://daversomethingsomethingorg.github.io/ConanToolchain/"
+
 # Set up a baseline install before proceeding with our customizations
 RUN dnf install -y 'dnf-command(config-manager)' yum-utils \
  && yum-config-manager --enable crb \
