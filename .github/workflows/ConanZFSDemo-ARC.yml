@@ -37,7 +37,7 @@ jobs:
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-toolchain.yml@main
     secrets: inherit
     with:
-      conan_home_host_path: "/CONAN_HOME"
+      conan_home: "/CONAN_HOME"
       runner_selection: 'linux-x86-64'
       component_subdirectory: "${{ inputs.component_subdirectory }}"
       conan_local_recipes: "conan-center-index"
