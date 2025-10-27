@@ -19,12 +19,12 @@ on:
       component_subdirectory:
         type: string
         default: "demos/ZFS-clone"
-      promote_enabled:
-        type: boolean
-        default: true
-      save_broken_build:
-        type: boolean
-        default: true
+#      promote_enabled:
+#        type: boolean
+#        default: true
+#      save_broken_build:
+#        type: boolean
+#        default: true
       conan_local_repo:
         type: choice
         default: "http://nexus.homelab/repository/conan-homelab/"
@@ -37,7 +37,7 @@ jobs:
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-toolchain.yml@main
     secrets: inherit
     with:
-      conan_home: "/CONAN_HOME"
+      conan_home_host_path: "/CONAN_HOME"
       runner_selection: 'linux-x86-64'
       component_subdirectory: "${{ inputs.component_subdirectory }}"
       conan_local_recipes: "conan-center-index"
