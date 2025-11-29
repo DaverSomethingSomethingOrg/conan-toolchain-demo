@@ -1,5 +1,9 @@
 # Optimizing C/C++ Build Performance using Conan and OpenZFS - Demo
 
+Read the Article here:
+
+- https://daversomethingsomethingorg.github.io/ConanToolchain/latest/ConanZFSDemo/
+
 This demo provides a few simple scripts to demonstrate use of OpenZFS
 dataset clones to optimize Conan build performance and storage space
 usage.  OpenZFS also enables sharing of a single conan cache across

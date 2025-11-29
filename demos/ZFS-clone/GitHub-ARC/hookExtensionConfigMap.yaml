@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: github-arc-container-hooks
+data:
+  content: |
+    metadata:
+      annotations:
+        example: "extension"
+        annotated-by: "extension"
+      labels:
+        labeled-by: "extension"
+    spec:
+      containers:
+        - name: $job
+          volumeMounts:
+            - name: conan-home
+              mountPath: /CONAN_HOME
+          env:
+            - name: CONAN_HOME
+              value: /CONAN_HOME
+      volumes:
+        - name: conan-home
+          ephemeral:
+            volumeClaimTemplate:
+              spec:
+                accessModes: [ "ReadWriteOnce" ]
+                storageClassName: "openebs-zfspv"
+                dataSource:
+                  name: gcc12-toolchain-main
+                  kind: PersistentVolumeClaim
+                resources:
+                  requests:
+                    storage: 200Gi

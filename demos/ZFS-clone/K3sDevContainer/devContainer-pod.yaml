@@ -1,0 +1,72 @@
+# devContainer-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: devcontainer-pod
+  labels:
+    app: conan
+    cache: gcc12-toolchain-main
+spec:
+  initContainers:
+  - name: code-init
+    image: "nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      #fsGroup: 2000
+    command: ["/bin/sh", "-c", "git clone https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo.git /workspace/conan-toolchain-demo"]
+    volumeMounts:
+    - mountPath: /workspace
+      name: code-volume
+
+  containers:
+  - name: conan-container
+    image: "nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
+    # https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      #fsGroup: 2000
+    env:
+    - name: CS_DISABLE_FILE_DOWNLOADS
+      value: "1"
+    - name: CONAN_HOME
+      value: /CONAN_HOME
+    workingDir: /workspace/conan-toolchain-demo
+    command: ["/bin/sh", "-c", "while sleep 1000; do :; done"]
+    volumeMounts:
+    - mountPath: /workspace
+      name: code-volume
+    - mountPath: /home/vscode/.cache
+      name: cache-volume
+    - mountPath: /CONAN_HOME
+      name: conan-home
+
+  volumes:
+  - name: code-volume
+    # https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
+    emptyDir: {}
+  - name: cache-volume
+    emptyDir: {}
+  - name: conan-home
+    persistentVolumeClaim:
+      claimName: "gcc12-toolchain-main-hephaestus-devcontainer"
+
+---
+
+# Clone CONAN_HOME directly from PVC (internal snapshot)
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: gcc12-toolchain-main-hephaestus-devcontainer
+spec:
+  storageClassName: openebs-zfspv
+  dataSource:
+    name: gcc12-toolchain-main
+    kind: PersistentVolumeClaim
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Gi
